@@ -28,7 +28,13 @@ Aplikasi manajemen sekolah berbasis web untuk mengelola data Kelas, Guru, dan Si
 ```bash
 npm install
 npx prisma migrate dev
+npx prisma generate
 npm run dev
 ```
 
 Aplikasi berjalan di [http://localhost:3000](http://localhost:3000).
+
+# Akun default untuk login admin:
+
+- username: iniadmin
+- password: admin123
