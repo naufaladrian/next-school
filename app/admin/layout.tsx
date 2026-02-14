@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { LogOut, Users, School, GraduationCap, LayoutDashboard } from "lucide-react";
+import { LogOut, Users, School, GraduationCap, LayoutDashboard, ClipboardList } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const sidebarLinks = [
@@ -11,6 +11,7 @@ const sidebarLinks = [
     { href: "/admin/siswa", label: "Siswa", icon: Users },
     { href: "/admin/kelas", label: "Kelas", icon: School },
     { href: "/admin/guru", label: "Guru", icon: GraduationCap },
+    { href: "/admin/rekap", label: "Rekap", icon: ClipboardList },
 ];
 
 export default function AdminLayout({

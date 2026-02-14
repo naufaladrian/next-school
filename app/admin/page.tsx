@@ -1,10 +1,11 @@
-import { Users, School, GraduationCap } from "lucide-react";
+import { Users, School, GraduationCap, ClipboardList } from "lucide-react";
 import Link from "next/link";
 
 const stats = [
     { label: "Siswa", href: "/admin/siswa", icon: Users },
     { label: "Kelas", href: "/admin/kelas", icon: School },
     { label: "Guru", href: "/admin/guru", icon: GraduationCap },
+    { label: "Rekap", href: "/admin/rekap", icon: ClipboardList },
 ];
 
 export default function Page() {
