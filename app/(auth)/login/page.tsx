@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import {
     Card,
@@ -16,6 +16,8 @@ import { Button } from "@/components/ui/button";
 
 export default function LoginPage() {
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const callbackUrl = searchParams.get("callbackUrl") || "/admin";
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
@@ -40,7 +42,7 @@ export default function LoginPage() {
                 return;
             }
 
-            router.push("/");
+            router.push(callbackUrl);
             router.refresh();
         } catch {
             setError("Terjadi kesalahan, coba lagi.");
