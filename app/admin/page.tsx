@@ -1,25 +1,34 @@
-"use client";
+import { Users, School, GraduationCap, ClipboardList } from "lucide-react";
+import Link from "next/link";
 
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { LogOut } from "lucide-react";
+const stats = [
+    { label: "Siswa", href: "/admin/siswa", icon: Users },
+    { label: "Kelas", href: "/admin/kelas", icon: School },
+    { label: "Guru", href: "/admin/guru", icon: GraduationCap },
+    { label: "Rekap", href: "/admin/rekap", icon: ClipboardList },
+];
 
 export default function Page() {
-    const router = useRouter();
-
-    async function handleLogout() {
-        await fetch("/api/auth/logout", { method: "POST" });
-        router.push("/login");
-        router.refresh();
-    }
-
     return (
-        <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-zinc-50 font-sans dark:bg-black">
-            <h1 className="text-2xl font-bold">INI HALAMAN AWAL ADMIN</h1>
-            <Button variant="destructive" onClick={handleLogout}>
-                <LogOut className="mr-2 h-4 w-4" />
-                Logout
-            </Button>
+        <div>
+            <h1 className="mb-6 text-2xl font-bold">Dashboard</h1>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {stats.map((item) => (
+                    <Link
+                        key={item.href}
+                        href={item.href}
+                        className="flex items-center gap-4 rounded-lg border bg-card p-6 transition-colors hover:bg-muted"
+                    >
+                        <item.icon className="h-8 w-8 text-primary" />
+                        <div>
+                            <p className="text-lg font-semibold">Kelola {item.label}</p>
+                            <p className="text-sm text-muted-foreground">
+                                Manage data {item.label.toLowerCase()}
+                            </p>
+                        </div>
+                    </Link>
+                ))}
+            </div>
         </div>
     );
 }
