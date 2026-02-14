@@ -1,0 +1,39 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+// APPLICATION SCHEMA
+model User {
+  id       Int    @id @default(autoincrement())
+  username String @unique
+  password String
+}
+
+model Kelas {
+  id    Int     @id @default(autoincrement())
+  nama  String  @unique
+  guru  Guru[]
+  siswa Siswa[]
+}
+
+model Guru {
+  id      Int    @id @default(autoincrement())
+  nama    String
+  kelasId Int
+  kelas   Kelas  @relation(fields: [kelasId], references: [id])
+}
+
+model Siswa {
+  id      Int    @id @default(autoincrement())
+  nama    String
+  kelasId Int
+  kelas   Kelas  @relation(fields: [kelasId], references: [id])
+}
