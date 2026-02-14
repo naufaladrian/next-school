@@ -21,7 +21,19 @@ interface Guru {
     nama: string;
 }
 
-interface KelasRekap {
+interface KelasSiswa {
+    id: number;
+    nama: string;
+    siswa: Siswa[];
+}
+
+interface KelasGuru {
+    id: number;
+    nama: string;
+    guru: Guru[];
+}
+
+interface KelasSemua {
     id: number;
     nama: string;
     siswa: Siswa[];
@@ -29,13 +41,22 @@ interface KelasRekap {
 }
 
 export default function RekapPage() {
-    const [data, setData] = useState<KelasRekap[]>([]);
+    const [siswaKelas, setSiswaKelas] = useState<KelasSiswa[]>([]);
+    const [guruKelas, setGuruKelas] = useState<KelasGuru[]>([]);
+    const [semua, setSemua] = useState<KelasSemua[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        fetch("/api/rekap")
-            .then(res => res.ok ? res.json() : [])
-            .then(data => setData(data))
+        Promise.all([
+            fetch("/api/rekap/siswa-kelas").then(r => r.ok ? r.json() : []),
+            fetch("/api/rekap/guru-kelas").then(r => r.ok ? r.json() : []),
+            fetch("/api/rekap/semua").then(r => r.ok ? r.json() : []),
+        ])
+            .then(([sk, gk, sm]) => {
+                setSiswaKelas(sk);
+                setGuruKelas(gk);
+                setSemua(sm);
+            })
             .finally(() => setLoading(false));
     }, []);
 
@@ -52,7 +73,6 @@ export default function RekapPage() {
         <div className="space-y-10">
             <h1 className="text-2xl font-bold">Rekap Data</h1>
 
-            {/* Table 1: Siswa per Kelas */}
             <section>
                 <h2 className="mb-4 text-lg font-semibold">Daftar Siswa per Kelas</h2>
                 <div className="rounded-lg border bg-card">
@@ -64,12 +84,12 @@ export default function RekapPage() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {data.length === 0 ? (
+                            {siswaKelas.length === 0 ? (
                                 <TableRow>
                                     <TableCell colSpan={2} className="text-center py-8 text-muted-foreground">Belum ada data</TableCell>
                                 </TableRow>
                             ) : (
-                                data.map((kelas) => {
+                                siswaKelas.map((kelas) => {
                                     const count = Math.max(kelas.siswa.length, 1);
                                     return kelas.siswa.length === 0 ? (
                                         <TableRow key={kelas.id}>
@@ -95,7 +115,6 @@ export default function RekapPage() {
 
             <Separator />
 
-            {/* Table 2: Guru per Kelas */}
             <section>
                 <h2 className="mb-4 text-lg font-semibold">Daftar Guru per Kelas</h2>
                 <div className="rounded-lg border bg-card">
@@ -107,12 +126,12 @@ export default function RekapPage() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {data.length === 0 ? (
+                            {guruKelas.length === 0 ? (
                                 <TableRow>
                                     <TableCell colSpan={2} className="text-center py-8 text-muted-foreground">Belum ada data</TableCell>
                                 </TableRow>
                             ) : (
-                                data.map((kelas) => {
+                                guruKelas.map((kelas) => {
                                     const count = Math.max(kelas.guru.length, 1);
                                     return kelas.guru.length === 0 ? (
                                         <TableRow key={kelas.id}>
@@ -138,7 +157,6 @@ export default function RekapPage() {
 
             <Separator />
 
-            {/* Table 3: Siswa, Kelas, Guru */}
             <section>
                 <h2 className="mb-4 text-lg font-semibold">Daftar Siswa, Kelas, dan Guru</h2>
                 <div className="rounded-lg border bg-card">
@@ -151,12 +169,12 @@ export default function RekapPage() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {data.length === 0 ? (
+                            {semua.length === 0 ? (
                                 <TableRow>
                                     <TableCell colSpan={3} className="text-center py-8 text-muted-foreground">Belum ada data</TableCell>
                                 </TableRow>
                             ) : (
-                                data.map((kelas) => {
+                                semua.map((kelas) => {
                                     const rowCount = Math.max(kelas.siswa.length, kelas.guru.length, 1);
                                     return Array.from({ length: rowCount }).map((_, idx) => (
                                         <TableRow key={`all-${kelas.id}-${idx}`}>
