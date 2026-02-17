@@ -11,12 +11,12 @@ export async function GET() {
     );
   }
 
-  const siswa = await prisma.siswa.findMany({
+  const ortu = await prisma.orangTua.findMany({
     orderBy: { id: "desc" },
-    include: { kelas: true, ortu: true },
+    include: { siswa: true },
   });
 
-  return NextResponse.json(siswa);
+  return NextResponse.json(ortu);
 }
 
 export async function POST(request: Request) {
@@ -29,40 +29,40 @@ export async function POST(request: Request) {
   }
 
   try {
-    const { nama, kelasId } = await request.json();
+    const { nama, siswaId } = await request.json();
 
     if (!nama || !nama.trim()) {
       return NextResponse.json(
-        { error: "Nama siswa wajib diisi" },
+        { error: "Nama orang tua wajib diisi" },
         { status: 400 },
       );
     }
 
-    if (!kelasId) {
+    if (!siswaId) {
       return NextResponse.json(
-        { error: "Kelas wajib dipilih" },
+        { error: "Siswa wajib dipilih" },
         { status: 400 },
       );
     }
 
-    const kelas = await prisma.kelas.findUnique({
-      where: { id: Number(kelasId) },
+    const siswa = await prisma.siswa.findUnique({
+      where: { id: Number(siswaId) },
     });
-    if (!kelas) {
+    if (!siswa) {
       return NextResponse.json(
-        { error: "Kelas tidak ditemukan" },
+        { error: "Siswa tidak ditemukan" },
         { status: 404 },
       );
     }
 
-    const siswa = await prisma.siswa.create({
-      data: { nama: nama.trim(), kelasId: Number(kelasId) },
-      include: { kelas: true },
+    const ortu = await prisma.orangTua.create({
+      data: { nama: nama.trim(), siswaId: Number(siswaId) },
+      include: { siswa: true },
     });
 
-    return NextResponse.json(siswa, { status: 201 });
+    return NextResponse.json(ortu, { status: 201 });
   } catch (error) {
-    console.error("Create siswa error:", error);
+    console.error("Create ortu error:", error);
     return NextResponse.json(
       { error: "Terjadi kesalahan server" },
       { status: 500 },

@@ -1,0 +1,7 @@
+-- CreateTable
+CREATE TABLE "OrangTua" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "nama" TEXT NOT NULL,
+    "siswaId" INTEGER NOT NULL,
+    CONSTRAINT "OrangTua_siswaId_fkey" FOREIGN KEY ("siswaId") REFERENCES "Siswa" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);

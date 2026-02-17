@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 
-interface Kelas {
+interface Siswa {
     id: number;
     nama: string;
 }
@@ -31,38 +31,31 @@ interface Kelas {
 interface Ortu {
     id: number;
     nama: string;
-}
-
-interface Siswa {
-    id: number;
-    nama: string;
     kelasId: number;
-    kelas: Kelas;
-    ortuId: number;
-    ortu: Ortu[];
+    siswa: Siswa;
 }
 
-export default function SiswaPage() {
-    const [siswaList, setSiswaList] = useState<Siswa[]>([]);
+export default function OrtuPage() {
+    const [ortuList, setOrtuList] = useState<Ortu[]>([]);
     const [loading, setLoading] = useState(true);
     const [deleteOpen, setDeleteOpen] = useState(false);
-    const [selected, setSelected] = useState<Siswa | null>(null);
+    const [selected, setSelected] = useState<Ortu | null>(null);
 
     useEffect(() => {
-        fetch("/api/siswa")
+        fetch("/api/ortu")
             .then(res => res.ok ? res.json() : [])
-            .then(data => setSiswaList(data))
+            .then(data => setOrtuList(data))
             .finally(() => setLoading(false));
     }, []);
 
     async function refreshData() {
-        const res = await fetch("/api/siswa");
-        if (res.ok) setSiswaList(await res.json());
+        const res = await fetch("/api/ortu");
+        if (res.ok) setOrtuList(await res.json());
     }
 
     async function handleDelete() {
         if (!selected) return;
-        const res = await fetch(`/api/siswa/${selected.id}`, { method: "DELETE" });
+        const res = await fetch(`/api/ortu/${selected.id}`, { method: "DELETE" });
         const data = await res.json();
         if (!res.ok) {
             alert(data.error || "Gagal menghapus");
@@ -74,10 +67,10 @@ export default function SiswaPage() {
     return (
         <div>
             <div className="mb-6 flex items-center justify-between">
-                <h1 className="text-2xl font-bold">Kelola Siswa</h1>
+                <h1 className="text-2xl font-bold">Kelola Ortu</h1>
                 <Button asChild>
-                    <Link href="/admin/siswa/create">
-                        <Plus className="mr-2 h-4 w-4" /> Tambah Siswa
+                    <Link href="/admin/ortu/create">
+                        <Plus className="mr-2 h-4 w-4" /> Tambah Ortu
                     </Link>
                 </Button>
             </div>
@@ -87,9 +80,8 @@ export default function SiswaPage() {
                     <TableHeader>
                         <TableRow>
                             <TableHead className="w-16">No</TableHead>
-                            <TableHead>Nama Siswa</TableHead>
-                            <TableHead>Kelas</TableHead>
-                            <TableHead>Orang Tua</TableHead>
+                            <TableHead>Nama Orang Tua</TableHead>
+                            <TableHead>Siswa</TableHead>
                             <TableHead className="w-32 text-center">Aksi</TableHead>
                         </TableRow>
                     </TableHeader>
@@ -98,23 +90,20 @@ export default function SiswaPage() {
                             <TableRow>
                                 <TableCell colSpan={4} className="text-center py-8 text-muted-foreground">Memuat data...</TableCell>
                             </TableRow>
-                        ) : siswaList.length === 0 ? (
+                        ) : ortuList.length === 0 ? (
                             <TableRow>
-                                <TableCell colSpan={4} className="text-center py-8 text-muted-foreground">Belum ada data siswa</TableCell>
+                                <TableCell colSpan={4} className="text-center py-8 text-muted-foreground">Belum ada data ortu</TableCell>
                             </TableRow>
                         ) : (
-                            siswaList.map((s, i) => (
+                            ortuList.map((s, i) => (
                                 <TableRow key={s.id}>
                                     <TableCell>{i + 1}</TableCell>
                                     <TableCell className="font-medium">{s.nama}</TableCell>
-                                    <TableCell>{s.kelas.nama}</TableCell>
-                                    <TableCell >
-                                        {s.ortu.map((o, i) => <p key={i}>{o.nama}</p>)}
-                                    </TableCell>
+                                    <TableCell>{s.siswa.nama}</TableCell>
                                     <TableCell className="text-center">
                                         <div className="flex items-center justify-center gap-1">
                                             <Button variant="ghost" size="icon" asChild>
-                                                <Link href={`/admin/siswa/${s.id}/edit`}>
+                                                <Link href={`/admin/ortu/${s.id}/edit`}>
                                                     <Pencil className="h-4 w-4" />
                                                 </Link>
                                             </Button>
@@ -134,9 +123,9 @@ export default function SiswaPage() {
             <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
-                        <AlertDialogTitle>Hapus Siswa</AlertDialogTitle>
+                        <AlertDialogTitle>Hapus Ortu</AlertDialogTitle>
                         <AlertDialogDescription>
-                            Apakah Anda yakin ingin menghapus siswa <strong>{selected?.nama}</strong>? Tindakan ini tidak dapat dibatalkan.
+                            Apakah Anda yakin ingin menghapus ortu <strong>{selected?.nama}</strong>? Tindakan ini tidak dapat dibatalkan.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>

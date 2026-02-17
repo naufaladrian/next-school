@@ -32,8 +32,16 @@ model Guru {
 }
 
 model Siswa {
-  id      Int    @id @default(autoincrement())
+  id      Int        @id @default(autoincrement())
   nama    String
   kelasId Int
-  kelas   Kelas  @relation(fields: [kelasId], references: [id])
+  kelas   Kelas      @relation(fields: [kelasId], references: [id])
+  ortu    OrangTua[] //asumsi 1 siswa bisa memiliki lebih dari 1 data ortu (ibu&bapak)
+}
+
+model OrangTua {
+  id      Int    @id @default(autoincrement())
+  nama    String
+  siswaId Int
+  siswa   Siswa  @relation(fields: [siswaId], references: [id])
 }
